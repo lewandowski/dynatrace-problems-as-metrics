@@ -30,7 +30,19 @@ def get_problem_ttr_payloads(problems_from_api, problems_from_file):
                     payload_mz = "dtapi.problem.ttr.managementZone,dt.management_zone=\""+mz_name+"\",severity=\""+severity+"\",severity_level=\""+str(severity_level)+"\" "+ str(time_to_repair_mins)                    
                     logger.debug(payload_mz)
                     problem_ttr_payloads.append(payload_mz)
-
+                # for management_zone in problem['managementZones']:
+                #problem_title_raw = problem['title'].split()
+                #problem_title = "_".join(problem_title_raw)
+                #payload_problem = "dtapi.problem.ttr.title,dt.title=\""+problem_title+"\",severity=\""+severity+"\",severity_level=\""+str(severity_level)+"\" "+ str(time_to_repair_mins)                    
+                #logger.debug(payload_problem)
+                #logger.info("PAYLOAD PROBLEM :"+ payload_problem)
+                #problem_ttr_payloads.append(payload_problem)
+                #problem_impact_level_raw = problem['impactLevel'].split()
+                #problem_impact_level = "_".join(problem_impact_level_raw)
+                #payload_problem_impact_level = "dtapi.problem.ttr.impact_level,dt.impact_level=\""+problem_impact_level+"\",severity=\""+severity+"\",severity_level=\""+str(severity_level)+"\" "+ str(time_to_repair_mins)                    
+                #logger.debug(payload_problem_impact_level)
+                #logger.info("PAYLOAD PROBLEM :"+ payload_problem)
+                #problem_ttr_payloads.append(payload_problem_impact_level)
     return problem_ttr_payloads    
 
 def get_severity_level(severity):

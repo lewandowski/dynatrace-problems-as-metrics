@@ -7,6 +7,8 @@ Metrics sent:
 Total Open Problems:
 - dtapi.problem.open.global
 - dtapi.problem.open.managementZone
+- dtapi.problem.open.global.per_title [Extended Version]
+- dtapi.problem.open.global.per_impact_level [Extended Version]
 
 New Problems:
 - dtapi.problem.open.new.global
@@ -15,6 +17,7 @@ New Problems:
 Problem Time to Repair:
 - dtapi.problem.ttr.global
 - dtapi.problem.ttr.managementZone
+- dtapi.problem.ttr.title
 
 Age of Oldest Problem:
 - dtapi.problem.open.oldest.age.global
@@ -62,7 +65,9 @@ Sample Dashboard:
 
 Step 1: Clone this github repo to a suitable location on your computer/server 
 
-    git clone https://github.com/arunkrishnan-dt/dynatrace-problems-as-metrics.git
+    [Extended Version] git clone https://github.com/lewandowski/dynatrace-problems-as-metrics.git
+
+    [Original Version] git clone https://github.com/arunkrishnan-dt/dynatrace-problems-as-metrics.git
 
 Step 2: Update `dynatrace-problems-as-metrics/problems.config` with `tenancy_url` and `api_token` strings.
 

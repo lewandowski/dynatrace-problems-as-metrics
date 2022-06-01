@@ -103,8 +103,12 @@ def update_config_file(config_obj):
 def get_metric_metadata_payload():
     payload = ""
     problem_open_global = "#dtapi.problem.open.global gauge dt.meta.displayName=\"Problems Open - Global\", dt.meta.description=\"Problems Open - Global\", dt.meta.unit=\"Count\""
+    problem_open_global_per_title = "#dtapi.problem.open.global.per_title gauge dt.meta.displayName=\"Problems Open - Global Per Title\", dt.meta.description=\"Problems Open - Global Per Title\", dt.meta.unit=\"Count\""
+    problem_open_global_per_impact_level = "#dtapi.problem.open.global.per_impact_level gauge dt.meta.displayName=\"Problems Open - Global Per Impact Level\", dt.meta.description=\"Problems Open - Global Per Impact Level\", dt.meta.unit=\"Count\""
     problem_open_mz = "#dtapi.problem.open.managementZone gauge dt.meta.displayName=\"Problems Open - Managment Zone\", dt.meta.description=\"Problems Open - Management Zone\", dt.meta.unit=\"Count\""
     payload+= problem_open_global +"\n"
+    payload+= problem_open_global_per_title +"\n"
+    payload+= problem_open_global_per_impact_level +"\n"
     payload+= problem_open_mz +"\n"
 
     problem_open_new_global = "#dtapi.problem.open.new.global gauge dt.meta.displayName=\"Problems New - Global\", dt.meta.description=\"Problems New - Global\", dt.meta.unit=\"Count\""
@@ -114,8 +118,12 @@ def get_metric_metadata_payload():
 
     problem_ttr_global = "#dtapi.problem.ttr.global gauge dt.meta.displayName=\"Problem Time To Resolution - Global\", dt.meta.description=\"Problem Time To Resolution - Global\", dt.meta.unit=\"Minute\""
     problem_ttr_mz = "#dtapi.problem.ttr.managementZone gauge dt.meta.displayName=\"Problem Time To Resolution - Management Zone\", dt.meta.description=\"Problem Time To Resolution - Management Zone\",  dt.meta.unit=\"Minute\""
+    problem_ttr_title = "#dtapi.problem.ttr.title gauge dt.meta.displayName=\"Problem Time To Resolution - Title\", dt.meta.description=\"Problem Time To Resolution - Title\",  dt.meta.unit=\"Minute\""
+    problem_ttr_impact_level = "#dtapi.problem.ttr.impact_level gauge dt.meta.displayName=\"Problem Time To Resolution - Impact Level\", dt.meta.description=\"Problem Time To Resolution - Impact Level\",  dt.meta.unit=\"Minute\""
     payload+= problem_ttr_global +"\n"
     payload+= problem_ttr_mz +"\n"
+    payload+= problem_ttr_title +"\n"
+    payload+= problem_ttr_impact_level +"\n"
 
     problem_oldest_global = "#dtapi.problem.open.oldest.age.global gauge dt.meta.displayName=\"Problem Oldest Age - Global\", dt.meta.description=\"Problem Oldest Age - Global\", dt.meta.unit=\"Minute\""
     problem_oldest_mz = "#dtapi.problem.open.oldest.age.managementZone gauge dt.meta.displayName=\"Problem Oldest Age - Management Zone\", dt.meta.description=\"Problem Oldest Age - Management Zone\",  dt.meta.unit=\"Minute\""

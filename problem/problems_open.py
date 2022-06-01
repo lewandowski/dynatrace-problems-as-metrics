@@ -32,14 +32,50 @@ def get_global_open_problems_by_severity(problems_from_api):
         if problem['status'] == "OPEN":            
             global_open_problems_by_severity[problem['severityLevel']] = global_open_problems_by_severity[problem['severityLevel']] + 1
     return global_open_problems_by_severity
+
+def get_global_open_problems_by_title(problems_from_api):
+    title_dict = {}
+    for problem in problems_from_api:
+        if problem['status'] == "OPEN":            
+            problem_title = "_".join(problem['title'].split())
+            title_dict[problem_title] = title_dict.get(problem_title, 0) + 1
+    return title_dict
         
+def get_global_open_problems_by_impact_level(problems_from_api):
+    impact_level_dict = {}
+    for problem in problems_from_api:
+        if problem['status'] == "OPEN":            
+            problem_impact_level = "_".join(problem['impactLevel'].split())
+            impact_level_dict[problem_impact_level] = impact_level_dict.get(problem_impact_level, 0) + 1
+    return impact_level_dict
+
+def get_global_open_problems_payloads_title(problems_from_api):
+    global_open_problems_payloads = []
+    global_open_problems_by_title = get_global_open_problems_by_title(problems_from_api)    
+    
+    for title in global_open_problems_by_title:
+        payload = "dtapi.problem.open.global.per_title,dt.title=\""+title+"\" "+ str(global_open_problems_by_title[title])
+        global_open_problems_payloads.append(payload)            
+        logger.debug(payload)    
+    return global_open_problems_payloads
+z
+def get_global_open_problems_payloads_impact_level(problems_from_api):
+    global_open_problems_payloads = []
+    global_open_problems_by_impact_level = get_global_open_problems_by_impact_level(problems_from_api)    
+    
+    for impact_level in global_open_problems_by_impact_level:
+        payload = "dtapi.problem.open.global.per_impact_level,dt.impact_level=\""+impact_level+"\" "+ str(global_open_problems_by_impact_level[impact_level])
+        global_open_problems_payloads.append(payload)            
+        logger.debug(payload)    
+    return global_open_problems_payloads
+
 def get_global_open_problems_payloads(problems_from_api):
     global_open_problems_payloads = []
     global_open_problems_by_severity = get_global_open_problems_by_severity(problems_from_api)    
     
     for severity in global_open_problems_by_severity:
         severity_level = get_severity_level(severity)
-        payload = "dtapi.problem.open.global,severity=\""+severity+"\",severity_level=\""+str(severity_level)+"\" "+ str(global_open_problems_by_severity[severity])
+        payload = "dtapi.problem.open.global,severity_level=\""+str(severity_level)+"\" "+ str(global_open_problems_by_severity[severity])
         global_open_problems_payloads.append(payload)            
         logger.debug(payload)    
     return global_open_problems_payloads
@@ -97,12 +133,16 @@ def get_open_problems_payloads(problems_from_api, all_management_zone_names):
     open_problems_payloads = []
     # Global    
     global_open_problems_payloads = get_global_open_problems_payloads(problems_from_api)
+    # Global per title
+    global_open_problems_payloads_title = get_global_open_problems_payloads_title(problems_from_api)
+    # Global per impact
+    global_open_problems_payloads_impact = get_global_open_problems_payloads_impact_level(problems_from_api)
     # Management Zones
     mz_open_problems_by_severity, mz_open_problems_payloads = get_mz_open_problems_payloads(problems_from_api)
     # Management Zones without problems    
     mz_without_problems_payloads = get_management_zones_without_problems_payloads(all_management_zone_names,mz_open_problems_by_severity)
     
-    open_problems_payloads = open_problems_payloads + global_open_problems_payloads + mz_open_problems_payloads + mz_without_problems_payloads
+    open_problems_payloads = open_problems_payloads + global_open_problems_payloads + global_open_problems_payloads_title + global_open_problems_payloads_impact + mz_open_problems_payloads + mz_without_problems_payloads
 
     return open_problems_payloads
     # # Convert array to payload string
