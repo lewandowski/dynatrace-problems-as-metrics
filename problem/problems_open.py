@@ -58,7 +58,7 @@ def get_global_open_problems_payloads_title(problems_from_api):
         global_open_problems_payloads.append(payload)            
         logger.debug(payload)    
     return global_open_problems_payloads
-z
+
 def get_global_open_problems_payloads_impact_level(problems_from_api):
     global_open_problems_payloads = []
     global_open_problems_by_impact_level = get_global_open_problems_by_impact_level(problems_from_api)    
