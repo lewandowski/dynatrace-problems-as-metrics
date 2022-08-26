@@ -27,57 +27,97 @@ def get_severity_level(severity):
     return 6
 
 def get_global_open_problems_by_severity(problems_from_api):
-    global_open_problems_by_severity = get_severity_dict_template()
+    mz_severity_dict = {}
     for problem in problems_from_api:
-        if problem['status'] == "OPEN":            
-            global_open_problems_by_severity[problem['severityLevel']] = global_open_problems_by_severity[problem['severityLevel']] + 1
-    return global_open_problems_by_severity
+        if problem['status'] == "OPEN":  
+            management_zone_names = []
+            for management_zone in problem['managementZones']:                
+                mz_name = management_zone['name']
+                management_zone_names.append(mz_name)
+                problem_severity = "_".join(problem['severityLevel'].split())     
+                if not mz_name in mz_severity_dict:
+                    severity_dict = {}
+                    severity_dict[problem_severity] = severity_dict.get(problem_severity, 0) + 1
+                    new_dict = {mz_name : severity_dict}                    
+                    mz_severity_dict.update(new_dict)
+                else:
+                    if not problem_severity in mz_severity_dict[mz_name]:
+                        mz_severity_dict[mz_name][problem_severity] = mz_severity_dict[mz_name].get(problem_severity, 0) + 1
+                    else:
+                        mz_severity_dict[mz_name][problem_severity] = mz_severity_dict[mz_name][problem_severity] + 1
+    return mz_severity_dict
 
 def get_global_open_problems_by_title(problems_from_api):
-    title_dict = {}
+    mz_title_dict = {}
     for problem in problems_from_api:
-        if problem['status'] == "OPEN":            
-            problem_title = "_".join(problem['title'].split())
-            title_dict[problem_title] = title_dict.get(problem_title, 0) + 1
-    return title_dict
+        if problem['status'] == "OPEN":  
+            management_zone_names = []
+            for management_zone in problem['managementZones']:                
+                mz_name = management_zone['name']
+                management_zone_names.append(mz_name)       
+                problem_title = "_".join(problem['title'].split())     
+                if not mz_name in mz_title_dict:
+                    title_dict = {}
+                    title_dict[problem_title] = title_dict.get(problem_title, 0) + 1
+                    new_dict = {mz_name : title_dict}                    
+                    mz_title_dict.update(new_dict)
+                else:
+                    if not problem_title in mz_title_dict[mz_name]:
+                        mz_title_dict[mz_name][problem_title] = mz_title_dict[mz_name].get(problem_title, 0) + 1
+                    else:
+                        mz_title_dict[mz_name][problem_title] = mz_title_dict[mz_name][problem_title] + 1
+    return mz_title_dict
         
 def get_global_open_problems_by_impact_level(problems_from_api):
-    impact_level_dict = {}
+    mz_impact_level_dict = {}
     for problem in problems_from_api:
-        if problem['status'] == "OPEN":            
-            problem_impact_level = "_".join(problem['impactLevel'].split())
-            impact_level_dict[problem_impact_level] = impact_level_dict.get(problem_impact_level, 0) + 1
-    return impact_level_dict
+        if problem['status'] == "OPEN":  
+            management_zone_names = []
+            for management_zone in problem['managementZones']:                
+                mz_name = management_zone['name']
+                management_zone_names.append(mz_name)       
+                problem_impact_level = "_".join(problem['impactLevel'].split()) 
+                if not mz_name in mz_impact_level_dict:
+                    impact_level_dict = {}
+                    impact_level_dict[problem_impact_level] = impact_level_dict.get(problem_impact_level, 0) + 1
+                    new_dict = {mz_name : impact_level_dict}                    
+                    mz_impact_level_dict.update(new_dict)
+                else:
+                    if not problem_impact_level in mz_impact_level_dict[mz_name]:
+                        mz_impact_level_dict[mz_name][problem_impact_level] = mz_impact_level_dict[mz_name].get(problem_impact_level, 0) + 1
+                    else:
+                        mz_impact_level_dict[mz_name][problem_impact_level] = mz_impact_level_dict[mz_name][problem_impact_level] + 1
+    return mz_impact_level_dict
 
 def get_global_open_problems_payloads_title(problems_from_api):
     global_open_problems_payloads = []
     global_open_problems_by_title = get_global_open_problems_by_title(problems_from_api)    
-    
-    for title in global_open_problems_by_title:
-        payload = "dtapi.problem.open.global.per_title,dt.title=\""+title+"\" "+ str(global_open_problems_by_title[title])
-        global_open_problems_payloads.append(payload)            
-        logger.debug(payload)    
+    for mz_name in global_open_problems_by_title:
+        for title in global_open_problems_by_title[mz_name]:            
+            payload = "dtapi.problem.open.global.per_title,dt.management_zone=\""+mz_name+"\",dt.title=\""+title+"\" "+ str(global_open_problems_by_title[mz_name][title])
+            global_open_problems_payloads.append(payload)            
+            logger.debug(payload)    
     return global_open_problems_payloads
 
 def get_global_open_problems_payloads_impact_level(problems_from_api):
     global_open_problems_payloads = []
     global_open_problems_by_impact_level = get_global_open_problems_by_impact_level(problems_from_api)    
-    
-    for impact_level in global_open_problems_by_impact_level:
-        payload = "dtapi.problem.open.global.per_impact_level,dt.impact_level=\""+impact_level+"\" "+ str(global_open_problems_by_impact_level[impact_level])
-        global_open_problems_payloads.append(payload)            
-        logger.debug(payload)    
+    for mz_name in global_open_problems_by_impact_level:
+        for impact_level in global_open_problems_by_impact_level[mz_name]:            
+            payload = "dtapi.problem.open.global.per_impact_level,dt.management_zone=\""+mz_name+"\",dt.impact_level=\""+impact_level+"\" "+ str(global_open_problems_by_impact_level[mz_name][impact_level])
+            global_open_problems_payloads.append(payload)            
+            logger.debug(payload)    
     return global_open_problems_payloads
 
 def get_global_open_problems_payloads(problems_from_api):
     global_open_problems_payloads = []
     global_open_problems_by_severity = get_global_open_problems_by_severity(problems_from_api)    
-    
-    for severity in global_open_problems_by_severity:
-        severity_level = get_severity_level(severity)
-        payload = "dtapi.problem.open.global,severity_level=\""+str(severity_level)+"\" "+ str(global_open_problems_by_severity[severity])
-        global_open_problems_payloads.append(payload)            
-        logger.debug(payload)    
+    for mz_name in global_open_problems_by_severity:
+        for severity in global_open_problems_by_severity[mz_name]: 
+            severity_level = get_severity_level(severity)
+            payload = "dtapi.problem.open.global,dt.management_zone=\""+mz_name+"\",severity=\""+severity+"\",severity_level=\""+str(severity_level)+"\" "+ str(global_open_problems_by_severity[mz_name][severity])
+            global_open_problems_payloads.append(payload)            
+            logger.debug(payload)    
     return global_open_problems_payloads
 
 def get_mz_open_problems_by_severity(problems_from_api):
@@ -145,9 +185,3 @@ def get_open_problems_payloads(problems_from_api, all_management_zone_names):
     open_problems_payloads = open_problems_payloads + global_open_problems_payloads + global_open_problems_payloads_title + global_open_problems_payloads_impact + mz_open_problems_payloads + mz_without_problems_payloads
 
     return open_problems_payloads
-    # # Convert array to payload string
-    # payload = ""
-    # for entry in open_problems_payloads:
-    #     payload += entry +'\n'    
-    # return payload
-    
