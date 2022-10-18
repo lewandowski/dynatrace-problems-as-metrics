@@ -25,7 +25,10 @@ def get_problem_ttr_payloads(problems_from_api, problems_from_file):
                 payload = "dtapi.problem.ttr.global,severity=\""+severity+"\",severity_level=\""+str(severity_level)+"\" " + str(time_to_repair_mins)
                 logger.debug(payload)                               
                 problem_ttr_payloads.append(payload)
-                for management_zone in problem['managementZones']:
+                mzs = problem['managementZones']
+                if len(mzs) == 0:
+                    mzs = {"name": "NONE_MZ"}
+                for management_zone in mzs:   
                     mz_name = management_zone['name']
                     payload_mz = "dtapi.problem.ttr.managementZone,dt.management_zone=\""+mz_name+"\",severity=\""+severity+"\",severity_level=\""+str(severity_level)+"\" "+ str(time_to_repair_mins)                    
                     logger.debug(payload_mz)

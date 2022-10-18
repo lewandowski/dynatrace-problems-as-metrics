@@ -32,7 +32,10 @@ def get_mz_problem_oldest_age(problems_from_api):
         if problem['status'] == "OPEN":
             problem_start_time = problem['startTime']
             problem_age = get_minutes(curr_time - problem_start_time)
-            for management_zone in problem['managementZones']:
+            mzs = problem['managementZones']
+            if len(mzs) == 0:
+                mzs = {"name": "NONE_MZ"}
+            for management_zone in mzs:   
                 mz_name = management_zone['name']
                 if not mz_name in mz_problem_age_dict:
                     new_dict = {mz_name: problem_age}
@@ -55,7 +58,10 @@ def get_mz_without_problems_payloads(problems_from_api, all_management_zone_name
     management_zones_with_problems = []    
     for problem in problems_from_api:
         if problem['status'] == "OPEN":
-            for management_zone in problem['managementZones']:
+            mzs = problem['managementZones']
+            if len(mzs) == 0:
+                mzs = {"name": "NONE_MZ"}
+            for management_zone in mzs:   
                 mz_name = management_zone['name']
                 management_zones_with_problems.append(mz_name)
     

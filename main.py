@@ -66,7 +66,7 @@ def main():
     # PROBLEMS OPEN
     if config_obj["METRICS"]["PROBLEMS_OPEN"] == "true":
         all_management_zone_names = api.get_management_zones(TENANCY_URL, API_TOKEN)
-        problem_open_payloads = problems_open.get_open_problems_payloads(problems_from_api, all_management_zone_names)    
+        problem_open_payloads = problems_open.get_open_problems_payloads(problems_from_api, all_management_zone_names, problems_from_file)    
         problem_open_payload = get_payload_string(problem_open_payloads, time_in_milliseconds)
         logger.debug(problem_open_payload)
         api.post_metric(TENANCY_URL,API_TOKEN,problem_open_payload)
